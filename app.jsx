@@ -85,4 +85,4 @@ ReactDOM.render(
 ReactDom.render(
     <MyAppForm/>,
     document.getElementById('react-content')
-);/*
+);*/

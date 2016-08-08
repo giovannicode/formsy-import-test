@@ -58,94 +58,86 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/*var CommentBox = React.createClass({
-	  render: function() {
-	    return (
-	      <div className="commentBox">
-	        Hello, world! I am a CommentBox.
-	      </div>
-	    );
-	  }
-	});
+	var CommentBox = _react2.default.createClass({
+	  displayName: 'CommentBox',
 
-	ReactDOM.render(
-	  <CommentBox />,
-	  document.getElementById('react-content')
-	);
-	*/
-
-	var MyOwnInput = _react2.default.createClass({
-	  displayName: 'MyOwnInput',
-
-
-	  // Add the Formsy Mixin
-	  mixins: [_formsyReact.Formsy.Mixin],
-
-	  // setValue() will set the value of the component, which in
-	  // turn will validate it and the rest of the form
-	  changeValue: function changeValue(event) {
-	    this.setValue(event.currentTarget.value);
-	  },
 	  render: function render() {
-	    // Set a specific className based on the validation
-	    // state of this component. showRequired() is true
-	    // when the value is empty and the required prop is
-	    // passed to the input. showError() is true when the
-	    // value typed is invalid
-	    var className = this.showRequired() ? 'required' : this.showError() ? 'error' : null;
-
-	    // An error message is returned ONLY if the component is invalid
-	    // or the server has returned an error message
-	    var errorMessage = this.getErrorMessage();
-
 	    return _react2.default.createElement(
 	      'div',
-	      { className: className },
-	      _react2.default.createElement('input', { type: 'text', onChange: this.changeValue, value: this.getValue() }),
-	      _react2.default.createElement(
-	        'span',
-	        null,
-	        errorMessage
-	      )
+	      { className: 'commentBox' },
+	      'Hello, world! I am a CommentBox.'
 	    );
 	  }
 	});
 
-	var MyAppForm = _react2.default.createClass({
-	  displayName: 'MyAppForm',
-	  getInitialState: function getInitialState() {
-	    return {
-	      canSubmit: false
-	    };
-	  },
-	  enableButton: function enableButton() {
-	    this.setState({
-	      canSubmit: true
-	    });
-	  },
-	  disableButton: function disableButton() {
-	    this.setState({
-	      canSubmit: false
-	    });
-	  },
-	  submit: function submit(model) {
-	    someDep.saveEmail(model.email);
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      _formsyReact.Formsy.Form,
-	      { onValidSubmit: this.submit, onValid: this.enableButton, onInvalid: this.disableButton },
-	      _react2.default.createElement(MyOwnInput, { name: 'email', validations: 'isEmail', validationError: 'This is not a valid email', required: true }),
-	      _react2.default.createElement(
-	        'button',
-	        { type: 'submit', disabled: !this.state.canSubmit },
-	        'Submit'
-	      )
-	    );
-	  }
-	});
+	_reactDom2.default.render(_react2.default.createElement(CommentBox, null), document.getElementById('react-content'));
 
-	ReactDom.render(_react2.default.createElement(MyAppForm, null), document.getElementById('react-content'));
+	/*
+	  const MyOwnInput = React.createClass({
+
+	    // Add the Formsy Mixin
+	    mixins: [Formsy.Mixin],
+
+	    // setValue() will set the value of the component, which in
+	    // turn will validate it and the rest of the form
+	    changeValue(event) {
+	      this.setValue(event.currentTarget.value);
+	    },
+
+	    render() {
+	      // Set a specific className based on the validation
+	      // state of this component. showRequired() is true
+	      // when the value is empty and the required prop is
+	      // passed to the input. showError() is true when the
+	      // value typed is invalid
+	      const className = this.showRequired() ? 'required' : this.showError() ? 'error' : null;
+
+	      // An error message is returned ONLY if the component is invalid
+	      // or the server has returned an error message
+	      const errorMessage = this.getErrorMessage();
+
+	      return (
+	        <div className={className}>
+	          <input type="text" onChange={this.changeValue} value={this.getValue()}/>
+	          <span>{errorMessage}</span>
+	        </div>
+	      );
+	    }
+	  });
+
+	  const MyAppForm = React.createClass({
+	    getInitialState() {
+	      return {
+	        canSubmit: false
+	      }
+	    },
+	    enableButton() {
+	      this.setState({
+	        canSubmit: true
+	      });
+	    },
+	    disableButton() {
+	      this.setState({
+	        canSubmit: false
+	      });
+	    },
+	    submit(model) {
+	      someDep.saveEmail(model.email);
+	    },
+	    render() {
+	      return (
+	        <Formsy.Form onValidSubmit={this.submit} onValid={this.enableButton} onInvalid={this.disableButton}>
+	          <MyOwnInput name="email" validations="isEmail" validationError="This is not a valid email" required/>
+	          <button type="submit" disabled={!this.state.canSubmit}>Submit</button>
+	        </Formsy.Form>
+	      );
+	    }
+	  });
+
+	ReactDom.render(
+	    <MyAppForm/>,
+	    document.getElementById('react-content')
+	);*/
 
 /***/ },
 /* 1 */
@@ -284,17 +276,45 @@
 	} ())
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
 	        return setTimeout(fun, 0);
-	    } else {
-	        return cachedSetTimeout.call(null, fun, 0);
 	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
 	}
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
-	        clearTimeout(marker);
-	    } else {
-	        cachedClearTimeout.call(null, marker);
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
 	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
 	}
 	var queue = [];
 	var draining = false;
