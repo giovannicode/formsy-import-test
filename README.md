@@ -18,5 +18,5 @@ python -m SimpleHTTPServer 9090
 
 **Note**: If you comment out the **formsy-react** import, then the plain reactjs app will run just fine.
 
-I also added the formsy-react sample code to make it easier to test (assuming one gets to the point where the formsy-react
-import doesn't throw an error).
+I also added the formsy-react sample code to make it easier to test (*assuming one gets to the point where the formsy-react
+import doesn't throw an error*).
