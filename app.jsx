@@ -1,9 +1,8 @@
 import React from 'react';  
 import ReactDOM from 'react-dom';
 
-//import {Formsy} from 'formsy-react';
+import {Formsy} from 'formsy-react';
 
-// tutorial1.js
 var CommentBox = React.createClass({
   render: function() {
     return (
@@ -13,13 +12,16 @@ var CommentBox = React.createClass({
     );
   }
 });
+
 ReactDOM.render(
   <CommentBox />,
   document.getElementById('react-content')
 );
 
 
-/*  const MyOwnInput = React.createClass({
+
+/*
+  const MyOwnInput = React.createClass({
 
     // Add the Formsy Mixin
     mixins: [Formsy.Mixin],
@@ -83,4 +85,4 @@ ReactDOM.render(
 ReactDom.render(
     <MyAppForm/>,
     document.getElementById('react-content')
-);*/
+);/*
